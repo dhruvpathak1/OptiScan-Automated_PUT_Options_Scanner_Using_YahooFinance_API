@@ -4,8 +4,12 @@ import json
 import math
 import time
 import schedule
+import os
 import urllib.request
-from win10toast import ToastNotifier
+try:
+    from win10toast import ToastNotifier
+except ImportError:
+    ToastNotifier = None
 
 
 # ======================================================================================================================
@@ -118,8 +122,15 @@ def options_api():
         print("$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$-$")
 
         # NOTIFICATION ALERT CODE
-        toast = ToastNotifier()
-        toast.show_toast("Py_Options", "Execution Completed. Check Info", duration=10, icon_path="bull.ico")
+        if ToastNotifier:
+            try:
+                toast = ToastNotifier()
+                icon_path = os.path.join("assets", "bull.ico")
+                toast.show_toast("Py_Options", "Execution Completed. Check Info", duration=10, icon_path=icon_path)
+            except Exception as e:
+                print(f"\nNotification failed: {e}")
+        else:
+            print("\nNotification skipped: win10toast is only available on Windows.")
 
 
 # ======================================================================================================================
